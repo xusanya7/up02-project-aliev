@@ -1,8 +1,0 @@
-__pycache__/
-*.pyc
-*.log
-.vscode/
-venv/
-env/
-*.db
-credentials.txt
