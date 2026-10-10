@@ -8,12 +8,7 @@ class Product:
     
     def discounted_price(self):
         """Цена со скидкой 25% (упрощённо)."""
-<<<<<<< HEAD
-        return self.price * 0.90 #изменено в main
-    
-=======
-        return self.price * 0.80 # изменено в ветке conflict-test
->>>>>>> conflict-test
+        return self.price * 0.75 #итоговое значениеgit commit -m "Разрешён конфликт: скидка 25%"
 
     def __init__(self, product_id, category, name, weight, price, quantity, image):
         self.id = product_id
@@ -66,9 +61,15 @@ class Order:
         self.quantity = quantity
 
     def total(self):
+        """Стоимость заказа."""
         return self.product.price * self.quantity
 
+    def order_info(self):
+        """Краткая информация о заказе."""
+        return f"Заказ №{self.id} от {self.date}: {self.client}"
+
     def info(self):
+        """Полная информация о заказе."""
         return (
             f"Заказ №{self.id} от {self.date}: "
             f"{self.client} — {self.product.name} × {self.quantity} "
