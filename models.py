@@ -42,13 +42,7 @@ class Order:
     """Класс Заказ."""
 
     def __init__(self, order_id, date, client, product, quantity):
-        """
-        :param order_id: идентификатор заказа
-        :param date: дата заказа
-        :param client: ФИО клиента
-        :param product: объект класса Product
-        :param quantity: количество товара в заказе
-        """
+
         self.id = order_id
         self.date = date
         self.client = client
