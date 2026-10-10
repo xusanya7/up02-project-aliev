@@ -8,7 +8,8 @@ class Product:
     
     def discounted_price(self):
         """Цена со скидкой 25% (упрощённо)."""
-        return self.price * 0.75
+        return self.price * 0.90 #изменено в main
+    
 
     def __init__(self, product_id, category, name, weight, price, quantity, image):
         self.id = product_id
