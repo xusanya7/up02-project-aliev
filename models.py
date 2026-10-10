@@ -5,10 +5,6 @@ from discount import calculate_price_with_discount
 
 class Product:
     """Класс Товар (вариант 15: еда)."""
-    
-    def discounted_price(self):
-        """Цена со скидкой 25% (упрощённо)."""
-        return self.price * 0.75 #итоговое значениеgit commit -m "Разрешён конфликт: скидка 25%"
 
     def __init__(self, product_id, category, name, weight, price, quantity, image):
         self.id = product_id
@@ -20,29 +16,24 @@ class Product:
         self.image = image
 
     def total(self):
-        """Общая стоимость (цена × количество)."""
         return self.price * self.quantity
 
+    def price_with_discount(self, discount_percent):
+        return self.price * (1 - discount_percent / 100)
+
     def price_with_discount_auto(self, date=None):
-        """Цена со скидкой по алгоритму ДЭ."""
         if date is None:
             date = datetime.now()
         return calculate_price_with_discount(self.id, self.price, date)
 
-    def price_with_discount(self, discount_percent):
-        """Цена с указанной скидкой в процентах (ручной режим)."""
-        return self.price * (1 - discount_percent / 100)
-
     def indicator(self):
-        """Индикатор «много/мало» (порог 5)."""
         return "много" if self.quantity > 5 else "мало"
 
     def is_available(self):
-        """True, если товар есть в наличии."""
+        """Товар доступен для заказа?"""
         return self.quantity > 0
 
     def info(self):
-        """Строка с информацией о товаре."""
         return (
             f"{self.name} ({self.category}): "
             f"{self.price} руб. × {self.quantity} = {self.total()} руб. "
