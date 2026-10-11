@@ -28,7 +28,7 @@ Thumbs.db
 # Логи
 *.log
 
-# Базы данных (кроме рабочей БД)
+# Базы данных (кроме рабочей)
 *.db
 *.sqlite
 *.sqlite3
@@ -45,3 +45,12 @@ credentials.txt
 
 # Служебная папка-дубликат
 up02_project/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Excel (временные файлы)
+~$*.xlsx
+
+# Журналы SQLite
+*.db-journal
