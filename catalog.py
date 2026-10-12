@@ -85,6 +85,10 @@ def _add_label(parent, text, bg, bold=False,
 #  Индикатор «много / мало» (порог 5)
 def _indicator(qty):
     """Индикатор «много/мало» (порог 5)."""
+    try:
+        qty = float(qty)         # приведём к числу
+    except (TypeError, ValueError):
+        return "мало"            # на плохих данных — «мало»
     return "много" if qty > 5 else "мало"
 
 #  Форматирование цены (1 500 000 руб.)
