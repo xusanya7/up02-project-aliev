@@ -113,3 +113,15 @@ def create_order(client, items):
 
     finally:
         conn.close()
+
+def get_all_orders():
+    """
+    Возвращает список всех заказов.
+    :return: список кортежей (id, дата, клиент)
+    """
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, дата, клиент FROM Заказ ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
