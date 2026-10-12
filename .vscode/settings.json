@@ -1,3 +1,4 @@
 {
-    "python.analysis.extraPaths": ["./"]
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
 }
