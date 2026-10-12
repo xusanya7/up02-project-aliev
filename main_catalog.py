@@ -1,22 +1,30 @@
 """Главное окно с каталогом."""
 import tkinter as tk
 from tkinter import ttk
-from styles import COLOR_SECONDARY_BG, FONT_FAMILY, FONT_SIZE_TITLE, font
+
+from styles import COLOR_SECONDARY_BG, FONT_SIZE_TITLE, font
 from config import APP_TITLE
 import db_products as db
 from catalog import create_product_card
 from resources import load_image_proportional, PATH_LOGO, PATH_ICON
+from error_handler import safe_call
 
 
 class CatalogWindow:
     def __init__(self):
+        print("[1] Создаю Tk...")
         self.root = tk.Tk()
+        print("[2] Tk создан")
         self.root.title(APP_TITLE)
         self.root.geometry("900x700")
+        print("[3] Ставлю иконку...")
         self.set_icon()
+        print("[4] Строю UI...")
         self.build_ui()
+        print("[5] Загружаю товары...")
         self.load_products()
-
+        print("[6] __init__ завершён")
+    
     def set_icon(self):
         import os
         try:
@@ -63,27 +71,16 @@ class CatalogWindow:
         scrollbar.pack(side="right", fill="y")
 
     def load_products(self):
-        products = db.get_all_products()
+        """Загружает товары с обработкой ошибок."""
+        products = safe_call(db.get_all_products) or []
+        print(f"[DEBUG] Загружено товаров: {len(products)}")
         for p in products:
-            create_product_card(self.catalog_frame, p)
+            print(f"[DEBUG] Создаю карточку: {p.name}")
+            safe_call(create_product_card, self.catalog_frame, p)
+        print("[DEBUG] Готово")
 
     def run(self):
-        self.root.mainloop()
-    
-    def set_app_icon(self, root, icon_path):
-        """Устанавливает иконку приложения кроссплатформенно."""
-        import os
-        from resources import load_image_proportional
-
-        try:
-            if os.name == "nt":   # Windows
-                if os.path.exists(icon_path):
-                    root.iconbitmap(icon_path)
-            else:                  # Linux/Mac
-                png_path = icon_path.replace(".ico", ".png")
-                icon_img = load_image_proportional(png_path, max_size=(32, 32))
-                if icon_img:
-                    root.iconphoto(True, icon_img)
-                    root._icon_photo = icon_img  # сохраняем ссылку
-        except Exception as e:
-            print(f"Не удалось установить иконку: {e}")
+        self.root.mainloop() 
+if __name__ == "__main__":
+    app = CatalogWindow()
+    app.run()
