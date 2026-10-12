@@ -1,87 +1,80 @@
-"""Главное окно с каталогом."""
+"""Главное окно приложения."""
 import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox
 
-from styles import COLOR_SECONDARY_BG, FONT_SIZE_TITLE, font
-from config import APP_TITLE
-import db_products as db
+from styles import COLOR_MAIN_BG, font, FONT_SIZE_HEADER
 from catalog import create_product_card
-from resources import load_image_proportional, PATH_LOGO, PATH_ICON
-from error_handler import safe_call
+from db_products import get_all_products
+from order_manager import create_order
 
 
-class CatalogWindow:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title(APP_TITLE)
-        self.root.geometry("900x700")
-        self.set_icon()
+class MainApp:
+    """Главное окно каталога."""
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Каталог товаров")
+        self.root.geometry("800x600")
+        self.root.configure(bg=COLOR_MAIN_BG)
+
+        self.cart = []   # корзина: список словарей
+
         self.build_ui()
         self.load_products()
 
-    def set_icon(self):
-        import os
-        try:
-            if os.name == "nt":
-                self.root.iconbitmap(PATH_ICON)
-            else:
-                icon_img = load_image_proportional(
-                    PATH_ICON.replace(".ico", ".png"), max_size=(32, 32)
-                )
-                if icon_img:
-                    self.root.iconphoto(True, icon_img)
-        except Exception as e:
-            print(f"Не удалось установить иконку: {e}")
-
     def build_ui(self):
-        header = tk.Frame(self.root, bg=COLOR_SECONDARY_BG, height=80)
-        header.pack(fill="x")
-        header.pack_propagate(False)
+        tk.Label(self.root, text="Каталог товаров",
+                 font=font(FONT_SIZE_HEADER, bold=True),
+                 bg=COLOR_MAIN_BG).pack(pady=10)
 
-        logo = load_image_proportional(PATH_LOGO, max_size=(60, 60))
-        if logo:
-            logo_label = tk.Label(header, image=logo, bg=COLOR_SECONDARY_BG)
-            logo_label.image = logo
-            logo_label.pack(side="left", padx=15)
-        else:
-            tk.Label(header, text="[ЛОГОТИП]",
-                     bg=COLOR_SECONDARY_BG).pack(side="left", padx=15)
+        tk.Button(self.root, text="Оформить заказ",
+                  command=self.checkout).pack(pady=5)
 
-        tk.Label(header, text="КАТАЛОГ ТОВАРОВ",
-                 font=font(FONT_SIZE_TITLE, bold=True),
-                 bg=COLOR_SECONDARY_BG).pack(expand=True)
-
-        self.canvas = tk.Canvas(self.root, bg="white", highlightthickness=0)
-        scrollbar = ttk.Scrollbar(self.root, orient="vertical",
-                                   command=self.canvas.yview)
-        self.catalog_frame = tk.Frame(self.canvas, bg="white")
-        self.catalog_frame.bind(
-            "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        )
-        self.canvas.create_window((0, 0), window=self.catalog_frame, anchor="nw")
-        self.canvas.configure(yscrollcommand=scrollbar.set)
-        self.canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+        self.catalog_frame = tk.Frame(self.root, bg=COLOR_MAIN_BG)
+        self.catalog_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     def load_products(self):
-        """Загружает товары с обработкой ошибок."""
-        products = safe_call(db.get_all_products) or []
-        for p in products:
-            safe_call(create_product_card,
-                      self.catalog_frame, p,
-                      refresh=self.refresh_catalog)
+        products = get_all_products()
+        for product in products:
+            create_product_card(self.catalog_frame, product,
+                                refresh=self.add_to_cart)
 
     def refresh_catalog(self):
-        """Обновляет каталог (пересоздаёт карточки)."""
-        for w in self.catalog_frame.winfo_children():
-            w.destroy()
+        """Удаляет старые карточки и загружает заново."""
+        for widget in self.catalog_frame.winfo_children():
+            widget.destroy()
         self.load_products()
 
-    def run(self):
-        self.root.mainloop()
+    def add_to_cart(self, product, qty, size):
+        """Callback из формы: добавляет товар в корзину."""
+        self.cart.append({
+            "product_id": product.id,
+            "size": size,
+            "quantity": qty,
+            "price": product.price,
+        })
+        print(f"[КОРЗИНА] {self.cart}")
+
+    def checkout(self):
+        """Оформляет заказ со всеми позициями корзины."""
+        if not self.cart:
+            messagebox.showwarning("Корзина", "Корзина пуста")
+            return
+
+        items = [(i["product_id"], i["size"], i["quantity"], i["price"])
+                 for i in self.cart]
+
+        order_id = create_order("Петров Петр", items)
+
+        if order_id:
+            messagebox.showinfo("Успех", f"Заказ №{order_id} оформлен")
+            self.cart = []
+            self.refresh_catalog()
+        else:
+            messagebox.showerror("Ошибка", "Не удалось оформить заказ")
 
 
 if __name__ == "__main__":
-    app = CatalogWindow()
-    app.run()
+    root = tk.Tk()
+    app = MainApp(root)
+    root.mainloop()
