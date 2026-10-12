@@ -1,7 +1,7 @@
 """Главное окно с каталогом."""
 import tkinter as tk
 from tkinter import ttk
-from styles import COLOR_SECONDARY_BG, FONT_SIZE_TITLE, font
+from styles import COLOR_SECONDARY_BG, FONT_FAMILY, FONT_SIZE_TITLE, font
 from config import APP_TITLE
 import db_products as db
 from catalog import create_product_card
