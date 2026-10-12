@@ -12,19 +12,13 @@ from error_handler import safe_call
 
 class CatalogWindow:
     def __init__(self):
-        print("[1] Создаю Tk...")
         self.root = tk.Tk()
-        print("[2] Tk создан")
         self.root.title(APP_TITLE)
         self.root.geometry("900x700")
-        print("[3] Ставлю иконку...")
         self.set_icon()
-        print("[4] Строю UI...")
         self.build_ui()
-        print("[5] Загружаю товары...")
         self.load_products()
-        print("[6] __init__ завершён")
-    
+
     def set_icon(self):
         import os
         try:
@@ -73,14 +67,21 @@ class CatalogWindow:
     def load_products(self):
         """Загружает товары с обработкой ошибок."""
         products = safe_call(db.get_all_products) or []
-        print(f"[DEBUG] Загружено товаров: {len(products)}")
         for p in products:
-            print(f"[DEBUG] Создаю карточку: {p.name}")
-            safe_call(create_product_card, self.catalog_frame, p)
-        print("[DEBUG] Готово")
+            safe_call(create_product_card,
+                      self.catalog_frame, p,
+                      refresh=self.refresh_catalog)
+
+    def refresh_catalog(self):
+        """Обновляет каталог (пересоздаёт карточки)."""
+        for w in self.catalog_frame.winfo_children():
+            w.destroy()
+        self.load_products()
 
     def run(self):
-        self.root.mainloop() 
+        self.root.mainloop()
+
+
 if __name__ == "__main__":
     app = CatalogWindow()
     app.run()
