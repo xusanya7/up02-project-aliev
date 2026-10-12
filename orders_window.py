@@ -11,11 +11,12 @@ import order_manager as om
 class OrdersWindow:
     """Окно списка заказов."""
 
-    def __init__(self, parent):
+    def __init__(self, parent, current_user=None):
         """
-        Инициализация окна.
         :param parent: родительское окно
+        :param current_user: кортеж (id, фамилия, имя, отчество, логин, роль)
         """
+        self.current_user = current_user
         self.window = tk.Toplevel(parent)
         self.window.title("Список заказов")
         self.window.geometry("800x500")
@@ -26,7 +27,6 @@ class OrdersWindow:
 
     def build_ui(self):
         """Строит интерфейс окна."""
-        # Шапка
         header = tk.Frame(self.window, bg=COLOR_SECONDARY_BG, height=60)
         header.pack(fill="x")
         header.pack_propagate(False)
@@ -35,7 +35,6 @@ class OrdersWindow:
                  font=font(FONT_SIZE_TITLE, bold=True),
                  bg=COLOR_SECONDARY_BG).pack(pady=15)
 
-        # Таблица заказов
         columns = ("id", "date", "client")
         self.tree = ttk.Treeview(self.window, columns=columns,
                                  show="headings", height=15)
@@ -49,11 +48,8 @@ class OrdersWindow:
         self.tree.column("client", width=400, anchor="w")
 
         self.tree.pack(fill="both", expand=True, padx=20, pady=20)
-
-        # Привязка двойного клика
         self.tree.bind("<Double-1>", self.on_order_select)
 
-        # Кнопки
         btn_frame = tk.Frame(self.window, bg=COLOR_MAIN_BG)
         btn_frame.pack(fill="x", pady=10)
 
@@ -77,17 +73,15 @@ class OrdersWindow:
 
     def load_orders(self):
         """Загружает заказы из БД."""
-        # Очищаем таблицу
         for row in self.tree.get_children():
             self.tree.delete(row)
-
-        # Загружаем заказы
         try:
             orders = om.get_all_orders()
             for order in orders:
                 self.tree.insert("", tk.END, values=order)
         except Exception as e:
-            messagebox.showerror("Ошибка", f"Не удалось загрузить заказы:\n{e}")
+            messagebox.showerror("Ошибка",
+                                 f"Не удалось загрузить заказы:\n{e}")
 
     def on_order_select(self, event=None):
         """Обработчик выбора заказа."""
@@ -96,10 +90,8 @@ class OrdersWindow:
             messagebox.showwarning("Ошибка", "Выберите заказ")
             return
 
-        # Получаем данные выбранного заказа
         item = self.tree.item(selected[0])
         order_id = item["values"][0]
 
-        # Открываем окно состава заказа
         from order_items_window import OrderItemsWindow
-        OrderItemsWindow(self.window, order_id)
+        OrderItemsWindow(self.window, order_id, self.current_user)

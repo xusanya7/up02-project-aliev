@@ -1,0 +1,33 @@
+==================================================
+История коммитов проекта УП.02
+Студент: Алиев Гусейн саххат оглы, группа 3МЛ-1-24
+Команда: git log --oneline --graph --all --max-count=20
+Дата: 02.10.2026
+==================================================
+
+* 08f6275 (HEAD -> main, origin/main, origin/HEAD) ДЗ: расширен .gitignore (Jupyter, Excel, SQLite-журналы)
+* d0b0ef5 Добавлен important.txt, лог и tmp проигнорированы
+* 9b7d66d Обновлён .gitignore с правилами для Python
+*   a49e433 Merge branch 'main' of https://github.com/xusanya7/up02-project-aliev
+|\  
+| * 80169be Add new project version section to README
+* | 60256b7 Локальные правки README
+|/  
+| * 55f06dc (origin/feature/homework-8) ДЗ: файл homework_info.txt
+|/  
+* e2aa63e Update README with local and remote changes
+* 49fe8bc Локальное изменение README
+* df66d61 Remove redundant content from README
+| * e3f476e (origin/feature/remote-test) Заполнен remote_test.txt
+| * 9cea62f Добавлен файл в ветке feature/remote-test
+|/  
+* 71829dc Обновил README.md с новой информацией
+* b278e06 Расширен docstring класса Product
+* d8564b6 Удалена лишняя папка up02_project, разрешён конфликт
+* 492a320 Разрешён конфликт в README
+*   81ac9c4 Merge branch 'conflict-2'
+|\  
+| * d1b5658 Изменён заголовок README в main
+* | 3be2460 Изменён заголовок README в main
+|/  
+* 3d3cbf5 Добавлен метод order_info в классе Order

@@ -6,7 +6,8 @@ from discount import calculate_price_with_discount
 class Product:
     """Класс Товар (вариант 15: еда)."""
 
-    def __init__(self, product_id, category, name, weight, price, quantity, image):
+    def __init__(self, product_id, category, name, weight, price, 
+                 quantity, image, description=""):
         self.id = product_id
         self.category = category
         self.name = name
@@ -14,6 +15,7 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.image = image
+        self.description = description
 
     def total(self):
         return self.price * self.quantity

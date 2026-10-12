@@ -11,8 +11,14 @@ import order_manager as om
 class OrderItemsWindow:
     """Окно состава заказа."""
 
-    def __init__(self, parent, order_id):
+    def __init__(self, parent, order_id, current_user=None):
+        """
+        :param parent: родительское окно
+        :param order_id: id заказа
+        :param current_user: кортеж (id, фамилия, имя, отчество, логин, роль)
+        """
         self.order_id = order_id
+        self.current_user = current_user
         self.window = tk.Toplevel(parent)
         self.window.title(f"Состав заказа №{order_id}")
         self.window.geometry("850x500")
@@ -71,6 +77,14 @@ class OrderItemsWindow:
                   font=font(FONT_SIZE_NORMAL),
                   padx=15, pady=5).pack(side="left", padx=20)
 
+        # Кнопка «Редактировать» — только для Администратора (Задание А1)
+        if self.current_user and self.current_user[5] == "Администратор":
+            tk.Button(btn_frame, text="Редактировать",
+                      command=self.edit_order,
+                      bg=COLOR_ACCENT, fg="white",
+                      font=font(FONT_SIZE_NORMAL),
+                      padx=15, pady=5).pack(side="left", padx=10)
+
         tk.Button(btn_frame, text="Назад",
                   command=self.window.destroy,
                   bg=COLOR_ACCENT, fg="white",
@@ -79,7 +93,6 @@ class OrderItemsWindow:
 
     def load_items(self):
         """Загружает позиции заказа из БД."""
-        # Очищаем таблицу
         for row in self.tree.get_children():
             self.tree.delete(row)
 
@@ -105,7 +118,6 @@ class OrderItemsWindow:
                                          f"{price:.2f}",
                                          f"{item_total:.2f}"))
 
-            # Итоговая сумма
             total = om.get_order_total(self.order_id)
             self.total_label.config(
                 text=f"ИТОГО ПО ЗАКАЗУ: {total:.2f} руб."
@@ -114,3 +126,8 @@ class OrderItemsWindow:
         except Exception as e:
             messagebox.showerror("Ошибка",
                                  f"Не удалось загрузить состав:\n{e}")
+
+    def edit_order(self):
+        """Заглушка редактирования заказа (только Администратор)."""
+        messagebox.showinfo("В разработке",
+                            "Редактирование заказа будет позже")
