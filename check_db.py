@@ -1,17 +1,21 @@
-from config import DB_PATH
+"""Проверка структуры БД."""
 import sqlite3
+from pathlib import Path
 
-print("DB_PATH =", DB_PATH)
+# Найдём файл БД в папке databases/
+db_dir = Path("databases")
+for f in db_dir.glob("*.db"):
+    print(f"\n=== Файл: {f} ===")
+    con = sqlite3.connect(f)
+    cur = con.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = cur.fetchall()
+    print("Таблицы:", tables)
 
-con = sqlite3.connect(DB_PATH)
-cur = con.cursor()
-
-print("Таблицы в БД:")
-for row in cur.execute("SELECT name FROM sqlite_master WHERE type='table'"):
-    print(" -", row[0])
-
-print("\nСхема (первые строки):")
-for row in cur.execute("SELECT sql FROM sqlite_master WHERE type='table'"):
-    print(row[0], "\n")
-
-con.close()
+    for (tbl,) in tables:
+        cur.execute(f"PRAGMA table_info({tbl})")
+        cols = cur.fetchall()
+        print(f"\nТаблица '{tbl}' — колонки:")
+        for c in cols:
+            print(f"  {c[1]} ({c[2]})")
+    con.close()
