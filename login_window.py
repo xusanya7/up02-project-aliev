@@ -1,9 +1,9 @@
 """Окно авторизации."""
+
 import tkinter as tk
 from tkinter import messagebox
 from styles import COLOR_MAIN_BG, COLOR_ACCENT, FONT_SIZE_NORMAL, FONT_SIZE_HEADER, font
 import sqlite3
-
 
 DB_PATH = "databases/db_variant_15.db"
 
@@ -19,9 +19,12 @@ class LoginWindow:
         self.build_ui()
 
     def build_ui(self):
-        tk.Label(self.window, text="Вход в систему",
-                 font=font(FONT_SIZE_HEADER, bold=True),
-                 bg=COLOR_MAIN_BG).pack(pady=10)
+        tk.Label(
+            self.window,
+            text="Вход в систему",
+            font=font(FONT_SIZE_HEADER, bold=True),
+            bg=COLOR_MAIN_BG,
+        ).pack(pady=10)
 
         tk.Label(self.window, text="Логин:", bg=COLOR_MAIN_BG).pack()
         self.login_var = tk.StringVar()
@@ -29,11 +32,15 @@ class LoginWindow:
 
         tk.Label(self.window, text="Пароль:", bg=COLOR_MAIN_BG).pack()
         self.password_var = tk.StringVar()
-        tk.Entry(self.window, textvariable=self.password_var,
-                 show="*").pack()
+        tk.Entry(self.window, textvariable=self.password_var, show="*").pack()
 
-        tk.Button(self.window, text="Войти", command=self.do_login,
-                  bg=COLOR_ACCENT, fg="white").pack(pady=10)
+        tk.Button(
+            self.window,
+            text="Войти",
+            command=self.do_login,
+            bg=COLOR_ACCENT,
+            fg="white",
+        ).pack(pady=10)
 
     def do_login(self):
         login = self.login_var.get().strip()
@@ -44,7 +51,7 @@ class LoginWindow:
         cur.execute(
             "SELECT id, логин, роль FROM Пользователь "
             "WHERE логин = ? AND пароль = ?",
-            (login, password)
+            (login, password),
         )
         row = cur.fetchone()
         conn.close()

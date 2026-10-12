@@ -1,9 +1,14 @@
 """Авторизация пользователей."""
+
 import tkinter as tk
 from tkinter import messagebox
 from styles import (
-    COLOR_MAIN_BG, COLOR_SECONDARY_BG, COLOR_ACCENT,
-    FONT_SIZE_NORMAL, FONT_SIZE_TITLE, font
+    COLOR_MAIN_BG,
+    COLOR_SECONDARY_BG,
+    COLOR_ACCENT,
+    FONT_SIZE_NORMAL,
+    FONT_SIZE_TITLE,
+    font,
 )
 from database import get_user_by_login
 
@@ -28,28 +33,43 @@ class AuthWindow:
         header.pack(fill="x")
         header.pack_propagate(False)
 
-        tk.Label(header, text="ВХОД В СИСТЕМУ",
-                 font=font(FONT_SIZE_TITLE, bold=True),
-                 bg=COLOR_SECONDARY_BG).pack(pady=15)
+        tk.Label(
+            header,
+            text="ВХОД В СИСТЕМУ",
+            font=font(FONT_SIZE_TITLE, bold=True),
+            bg=COLOR_SECONDARY_BG,
+        ).pack(pady=15)
 
         form = tk.Frame(self.window, bg=COLOR_MAIN_BG)
         form.pack(pady=30)
 
-        tk.Label(form, text="Логин:", font=font(FONT_SIZE_NORMAL),
-                 bg=COLOR_MAIN_BG).pack(anchor="w")
+        tk.Label(
+            form, text="Логин:", font=font(FONT_SIZE_NORMAL), bg=COLOR_MAIN_BG
+        ).pack(anchor="w")
 
         self.login_var = tk.StringVar()
-        tk.Entry(form, textvariable=self.login_var, width=30,
-                 font=font(FONT_SIZE_NORMAL)).pack(pady=5)
+        tk.Entry(
+            form, textvariable=self.login_var, width=30, font=font(FONT_SIZE_NORMAL)
+        ).pack(pady=5)
 
-        tk.Button(form, text="Войти", command=self.login,
-                  bg=COLOR_ACCENT, fg="white",
-                  font=font(FONT_SIZE_NORMAL),
-                  padx=20, pady=5).pack(pady=15)
+        tk.Button(
+            form,
+            text="Войти",
+            command=self.login,
+            bg=COLOR_ACCENT,
+            fg="white",
+            font=font(FONT_SIZE_NORMAL),
+            padx=20,
+            pady=5,
+        ).pack(pady=15)
 
-        tk.Label(form, text="Пример: client1, manager1, admin1",
-                 font=font(FONT_SIZE_NORMAL),
-                 fg="gray", bg=COLOR_MAIN_BG).pack()
+        tk.Label(
+            form,
+            text="Пример: client1, manager1, admin1",
+            font=font(FONT_SIZE_NORMAL),
+            fg="gray",
+            bg=COLOR_MAIN_BG,
+        ).pack()
 
     def login(self):
         login = self.login_var.get().strip()

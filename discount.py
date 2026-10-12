@@ -1,4 +1,5 @@
 """Модуль расчёта скидки."""
+
 from datetime import datetime, timedelta
 import sqlite3
 from config import DB_PATH
@@ -33,8 +34,7 @@ def has_orders_in_previous_month(product_id, date):
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
-        "SELECT COUNT(*) FROM Заказ "
-        "WHERE товар_id = ? AND дата BETWEEN ? AND ?",
+        "SELECT COUNT(*) FROM Заказ " "WHERE товар_id = ? AND дата BETWEEN ? AND ?",
         (product_id, start, end),
     )
     count = cur.fetchone()[0]

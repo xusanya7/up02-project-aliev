@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 120
+exclude =
+    venv,
+    __pycache__,
+    .git,
+    .vscode,
+    tests,
+    task_*.py,
+    test_*.py
+ignore =
+    E203,
+    W503,
+    E501

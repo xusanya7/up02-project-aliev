@@ -1,4 +1,5 @@
 """Проверка структуры БД."""
+
 import sqlite3
 from pathlib import Path
 

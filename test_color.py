@@ -1,4 +1,5 @@
 """Тестирование подсветки."""
+
 from catalog import _get_card_color
 from styles import COLOR_HIGHLIGHT, COLOR_MAIN_BG
 
@@ -6,15 +7,15 @@ from styles import COLOR_HIGHLIGHT, COLOR_MAIN_BG
 def test_color():
     """Прогон тестов для подсветки."""
     test_cases = [
-        (10, COLOR_MAIN_BG,   "10 > 3"),
-        (5,  COLOR_MAIN_BG,   "5 > 3"),
-        (4,  COLOR_MAIN_BG,   "4 > 3"),
-        (3,  COLOR_HIGHLIGHT, "3 ≤ 3 (граница!)"),
-        (2,  COLOR_HIGHLIGHT, "2 ≤ 3"),
-        (0,  COLOR_HIGHLIGHT, "0 ≤ 3"),
+        (10, COLOR_MAIN_BG, "10 > 3"),
+        (5, COLOR_MAIN_BG, "5 > 3"),
+        (4, COLOR_MAIN_BG, "4 > 3"),
+        (3, COLOR_HIGHLIGHT, "3 ≤ 3 (граница!)"),
+        (2, COLOR_HIGHLIGHT, "2 ≤ 3"),
+        (0, COLOR_HIGHLIGHT, "0 ≤ 3"),
         # дописали из ДЗ
-        (100, COLOR_MAIN_BG,   "большое число"),
-        (-1,  COLOR_HIGHLIGHT, "отрицательное"),
+        (100, COLOR_MAIN_BG, "большое число"),
+        (-1, COLOR_HIGHLIGHT, "отрицательное"),
     ]
 
     print("=" * 60)
@@ -27,8 +28,7 @@ def test_color():
         status = "✅" if result == expected else "❌"
         if result == expected:
             passed += 1
-        print(f"{status} qty={qty}: {result} "
-              f"(ожидалось {expected}) — {comment}")
+        print(f"{status} qty={qty}: {result} " f"(ожидалось {expected}) — {comment}")
 
     print("=" * 60)
     print(f"Пройдено: {passed} / {len(test_cases)}")

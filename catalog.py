@@ -1,9 +1,13 @@
 """Каталог товаров."""
+
 import tkinter as tk
 
 from styles import (
-    COLOR_MAIN_BG, COLOR_HIGHLIGHT,
-    FONT_SIZE_NORMAL, FONT_SIZE_HEADER, font
+    COLOR_MAIN_BG,
+    COLOR_HIGHLIGHT,
+    FONT_SIZE_NORMAL,
+    FONT_SIZE_HEADER,
+    font,
 )
 from resources import load_image_proportional
 
@@ -56,8 +60,7 @@ def _add_image(card, product, bg):
         lbl.image = photo
         lbl.pack()
     else:
-        tk.Label(frame, text="[НЕТ ФОТО]", bg=bg,
-                 width=10, height=5).pack()
+        tk.Label(frame, text="[НЕТ ФОТО]", bg=bg, width=10, height=5).pack()
 
 
 def _add_text_info(card, product, bg):
@@ -65,24 +68,23 @@ def _add_text_info(card, product, bg):
     frame = tk.Frame(card, bg=bg)
     frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
-    name     = _truncate(product.name)     or "[Без названия]"
+    name = _truncate(product.name) or "[Без названия]"
     category = _truncate(product.category) or "[Без категории]"
-    weight   = product.weight   if product.weight   is not None else 0
-    qty      = product.quantity if product.quantity is not None else 0
-    price    = _format_price(product.price)
+    weight = product.weight if product.weight is not None else 0
+    qty = product.quantity if product.quantity is not None else 0
+    price = _format_price(product.price)
 
     _add_label(frame, name, bg, bold=True, size=FONT_SIZE_HEADER)
     _add_label(frame, f"Категория: {category}", bg)
     _add_label(frame, f"Количество: {_indicator(qty)} ({qty})", bg)
     _add_label(frame, f"Вес: {weight} г", bg)
-    _add_label(frame, price, bg, bold=True,
-               size=FONT_SIZE_HEADER, align="e")
+    _add_label(frame, price, bg, bold=True, size=FONT_SIZE_HEADER, align="e")
 
 
-def _add_label(parent, text, bg, bold=False,
-               size=FONT_SIZE_NORMAL, align="w"):
-    tk.Label(parent, text=text, font=font(size, bold=bold),
-             bg=bg, anchor=align).pack(fill="x")
+def _add_label(parent, text, bg, bold=False, size=FONT_SIZE_NORMAL, align="w"):
+    tk.Label(parent, text=text, font=font(size, bold=bold), bg=bg, anchor=align).pack(
+        fill="x"
+    )
 
 
 def _indicator(qty):
@@ -102,15 +104,17 @@ def _format_price(price):
 def _truncate(text, max_len=100):
     if not text:
         return text
-    return text if len(text) <= max_len else text[:max_len - 3] + "..."
+    return text if len(text) <= max_len else text[: max_len - 3] + "..."
 
 
 def _open_view(parent, product, refresh=None):
     """Открывает форму просмотра товара."""
     try:
         from view_form import ViewForm
+
         ViewForm(parent, product, on_add_to_order=refresh)
     except Exception as e:
         print(f"[ОШИБКА открытия формы] {e}")
         from tkinter import messagebox
+
         messagebox.showerror("Ошибка формы", str(e))

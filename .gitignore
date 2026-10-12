@@ -53,4 +53,4 @@ up02_project/
 ~$*.xlsx
 
 # Журналы SQLite
-*.db-journal
+*.db-journalvenv/

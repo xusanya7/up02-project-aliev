@@ -1,4 +1,5 @@
 """Модели данных для проекта УП.02."""
+
 from datetime import datetime
 from discount import calculate_price_with_discount
 
@@ -6,8 +7,9 @@ from discount import calculate_price_with_discount
 class Product:
     """Класс Товар (вариант 15: еда)."""
 
-    def __init__(self, product_id, category, name, weight, price, 
-                 quantity, image, description=""):
+    def __init__(
+        self, product_id, category, name, weight, price, quantity, image, description=""
+    ):
         self.id = product_id
         self.category = category
         self.name = name

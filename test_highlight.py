@@ -1,4 +1,5 @@
 """Тестирование подсветки товаров."""
+
 from catalog import _get_card_color
 from styles import COLOR_HIGHLIGHT, COLOR_MAIN_BG
 
@@ -7,17 +8,17 @@ def test_highlight():
     """Прогон тестов для подсветки."""
     test_cases = [
         # базовые
-        (10, COLOR_MAIN_BG,   "10 > 3 — нет подсветки"),
-        (5,  COLOR_MAIN_BG,   "5 > 3 — нет подсветки"),
-        (4,  COLOR_MAIN_BG,   "4 > 3 — нет подсветки"),
-        (3,  COLOR_HIGHLIGHT, "3 ≤ 3 — подсветка (граница)"),
-        (2,  COLOR_HIGHLIGHT, "2 ≤ 3 — подсветка"),
-        (1,  COLOR_HIGHLIGHT, "1 ≤ 3 — подсветка"),
-        (0,  COLOR_HIGHLIGHT, "0 ≤ 3 — подсветка"),
+        (10, COLOR_MAIN_BG, "10 > 3 — нет подсветки"),
+        (5, COLOR_MAIN_BG, "5 > 3 — нет подсветки"),
+        (4, COLOR_MAIN_BG, "4 > 3 — нет подсветки"),
+        (3, COLOR_HIGHLIGHT, "3 ≤ 3 — подсветка (граница)"),
+        (2, COLOR_HIGHLIGHT, "2 ≤ 3 — подсветка"),
+        (1, COLOR_HIGHLIGHT, "1 ≤ 3 — подсветка"),
+        (0, COLOR_HIGHLIGHT, "0 ≤ 3 — подсветка"),
         # новые из ДЗ
-        (1000, COLOR_MAIN_BG,   "большое число — нет подсветки"),
-        (-1,   COLOR_HIGHLIGHT, "отрицательное — подсветка (крайний случай)"),
-        (3,    COLOR_HIGHLIGHT, "3 — граница повторно"),
+        (1000, COLOR_MAIN_BG, "большое число — нет подсветки"),
+        (-1, COLOR_HIGHLIGHT, "отрицательное — подсветка (крайний случай)"),
+        (3, COLOR_HIGHLIGHT, "3 — граница повторно"),
     ]
 
     print("=" * 70)

@@ -1,6 +1,6 @@
 """Проверка класса Product."""
-from models import Product
 
+from models import Product
 
 p = Product(
     product_id=1,

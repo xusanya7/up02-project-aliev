@@ -1,4 +1,5 @@
 """Конфигурация приложения."""
+
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,10 +17,10 @@ DB_PATH = "databases/db_variant_15.db"
 FONT_FAMILY = "Calibri"
 
 # Цвета (по КИМ)
-COLOR_BG = "#FFFFFF"          # основной фон
-COLOR_HEADER = "#D2F6E7"      # шапка / дополнительный фон
-COLOR_ACCENT = "#70B2AF"      # акцент (разделители)
-COLOR_HIGHLIGHT = "#ff8080"   # подсветка при количестве ≤3
+COLOR_BG = "#FFFFFF"  # основной фон
+COLOR_HEADER = "#D2F6E7"  # шапка / дополнительный фон
+COLOR_ACCENT = "#70B2AF"  # акцент (разделители)
+COLOR_HIGHLIGHT = "#ff8080"  # подсветка при количестве ≤3
 
 # Размеры окна
 WINDOW_WIDTH = 900

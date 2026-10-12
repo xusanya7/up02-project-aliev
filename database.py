@@ -1,4 +1,5 @@
 """Работа с БД: пользователи, роли, товары."""
+
 import sqlite3
 
 DB_PATH = "databases/db_variant_15.db"
@@ -17,14 +18,17 @@ def get_user_by_login(login):
     """
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT Пользователь.id, Пользователь.фамилия,
                Пользователь.имя, Пользователь.отчество,
                Пользователь.логин, Роль.название
         FROM Пользователь
         JOIN Роль ON Пользователь.роль_id = Роль.id
         WHERE Пользователь.логин = ?
-    """, (login,))
+    """,
+        (login,),
+    )
     row = cur.fetchone()
     conn.close()
     return row
@@ -54,4 +58,5 @@ def get_all_products():
     :return: список объектов Product
     """
     from db_products import get_all_products as _get
+
     return _get()

@@ -1,9 +1,15 @@
 """Окно списка заказов для Менеджера."""
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from styles import (
-    COLOR_MAIN_BG, COLOR_SECONDARY_BG, COLOR_ACCENT,
-    FONT_SIZE_NORMAL, FONT_SIZE_HEADER, FONT_SIZE_TITLE, font
+    COLOR_MAIN_BG,
+    COLOR_SECONDARY_BG,
+    COLOR_ACCENT,
+    FONT_SIZE_NORMAL,
+    FONT_SIZE_HEADER,
+    FONT_SIZE_TITLE,
+    font,
 )
 import order_manager as om
 
@@ -31,13 +37,17 @@ class OrdersWindow:
         header.pack(fill="x")
         header.pack_propagate(False)
 
-        tk.Label(header, text="СПИСОК ЗАКАЗОВ",
-                 font=font(FONT_SIZE_TITLE, bold=True),
-                 bg=COLOR_SECONDARY_BG).pack(pady=15)
+        tk.Label(
+            header,
+            text="СПИСОК ЗАКАЗОВ",
+            font=font(FONT_SIZE_TITLE, bold=True),
+            bg=COLOR_SECONDARY_BG,
+        ).pack(pady=15)
 
         columns = ("id", "date", "client")
-        self.tree = ttk.Treeview(self.window, columns=columns,
-                                 show="headings", height=15)
+        self.tree = ttk.Treeview(
+            self.window, columns=columns, show="headings", height=15
+        )
 
         self.tree.heading("id", text="№")
         self.tree.heading("date", text="Дата")
@@ -53,23 +63,38 @@ class OrdersWindow:
         btn_frame = tk.Frame(self.window, bg=COLOR_MAIN_BG)
         btn_frame.pack(fill="x", pady=10)
 
-        tk.Button(btn_frame, text="Просмотр состава",
-                  command=self.on_order_select,
-                  bg=COLOR_ACCENT, fg="white",
-                  font=font(FONT_SIZE_NORMAL),
-                  padx=15, pady=5).pack(side="left", padx=20)
+        tk.Button(
+            btn_frame,
+            text="Просмотр состава",
+            command=self.on_order_select,
+            bg=COLOR_ACCENT,
+            fg="white",
+            font=font(FONT_SIZE_NORMAL),
+            padx=15,
+            pady=5,
+        ).pack(side="left", padx=20)
 
-        tk.Button(btn_frame, text="Обновить",
-                  command=self.load_orders,
-                  bg=COLOR_ACCENT, fg="white",
-                  font=font(FONT_SIZE_NORMAL),
-                  padx=15, pady=5).pack(side="left", padx=10)
+        tk.Button(
+            btn_frame,
+            text="Обновить",
+            command=self.load_orders,
+            bg=COLOR_ACCENT,
+            fg="white",
+            font=font(FONT_SIZE_NORMAL),
+            padx=15,
+            pady=5,
+        ).pack(side="left", padx=10)
 
-        tk.Button(btn_frame, text="Назад",
-                  command=self.window.destroy,
-                  bg=COLOR_ACCENT, fg="white",
-                  font=font(FONT_SIZE_NORMAL),
-                  padx=15, pady=5).pack(side="right", padx=20)
+        tk.Button(
+            btn_frame,
+            text="Назад",
+            command=self.window.destroy,
+            bg=COLOR_ACCENT,
+            fg="white",
+            font=font(FONT_SIZE_NORMAL),
+            padx=15,
+            pady=5,
+        ).pack(side="right", padx=20)
 
     def load_orders(self):
         """Загружает заказы из БД."""
@@ -80,8 +105,7 @@ class OrdersWindow:
             for order in orders:
                 self.tree.insert("", tk.END, values=order)
         except Exception as e:
-            messagebox.showerror("Ошибка",
-                                 f"Не удалось загрузить заказы:\n{e}")
+            messagebox.showerror("Ошибка", f"Не удалось загрузить заказы:\n{e}")
 
     def on_order_select(self, event=None):
         """Обработчик выбора заказа."""
@@ -94,4 +118,5 @@ class OrdersWindow:
         order_id = item["values"][0]
 
         from order_items_window import OrderItemsWindow
+
         OrderItemsWindow(self.window, order_id, self.current_user)

@@ -1,4 +1,5 @@
 """Работа с заказами и остатками товаров."""
+
 import sqlite3
 from datetime import datetime
 
@@ -46,7 +47,7 @@ def decrease_product_quantity(product_id, quantity):
 
         cur.execute(
             "UPDATE Товар SET количество = количество - ? WHERE id = ?",
-            (quantity, product_id)
+            (quantity, product_id),
         )
         conn.commit()
         return True
@@ -72,10 +73,7 @@ def create_order(client, items):
 
     try:
         date = datetime.now().strftime("%Y-%m-%d")
-        cur.execute(
-            "INSERT INTO Заказ (дата, клиент) VALUES (?, ?)",
-            (date, client)
-        )
+        cur.execute("INSERT INTO Заказ (дата, клиент) VALUES (?, ?)", (date, client))
         order_id = cur.lastrowid
 
         for product_id, size, quantity, price in items:
@@ -88,12 +86,12 @@ def create_order(client, items):
                 "INSERT INTO Состав_заказа "
                 "(заказ_id, товар_id, размер, количество, цена) "
                 "VALUES (?, ?, ?, ?, ?)",
-                (order_id, product_id, size, quantity, price)
+                (order_id, product_id, size, quantity, price),
             )
 
             cur.execute(
                 "UPDATE Товар SET количество = количество - ? WHERE id = ?",
-                (quantity, product_id)
+                (quantity, product_id),
             )
 
         conn.commit()
@@ -130,7 +128,8 @@ def get_order_items(order_id):
     """
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT
             Состав_заказа.id,
             Товар.название,
@@ -142,10 +141,13 @@ def get_order_items(order_id):
         JOIN Товар ON Состав_заказа.товар_id = Товар.id
         WHERE Состав_заказа.заказ_id = ?
         ORDER BY Состав_заказа.id
-    """, (order_id,))
+    """,
+        (order_id,),
+    )
     rows = cur.fetchall()
     conn.close()
     return rows
+
 
 def get_order_total(order_id):
     """
@@ -155,14 +157,18 @@ def get_order_total(order_id):
     """
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
+    cur.execute(
+        """
         SELECT SUM(количество * цена)
         FROM Состав_заказа
         WHERE заказ_id = ?
-    """, (order_id,))
+    """,
+        (order_id,),
+    )
     row = cur.fetchone()
     conn.close()
     return row[0] or 0.0
+
 
 def update_order_date(order_id, new_date):
     """
@@ -175,10 +181,7 @@ def update_order_date(order_id, new_date):
     cur = conn.cursor()
 
     try:
-        cur.execute(
-            "UPDATE Заказ SET дата = ? WHERE id = ?",
-            (new_date, order_id)
-        )
+        cur.execute("UPDATE Заказ SET дата = ? WHERE id = ?", (new_date, order_id))
         conn.commit()
         return True
 
@@ -199,8 +202,7 @@ def get_order_by_id(order_id):
     """
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, дата, клиент FROM Заказ WHERE id = ?",
-                (order_id,))
+    cur.execute("SELECT id, дата, клиент FROM Заказ WHERE id = ?", (order_id,))
     row = cur.fetchone()
     conn.close()
     return row
@@ -217,11 +219,14 @@ def delete_order_item(item_id):
 
     try:
         # 1. Получаем данные позиции
-        cur.execute("""
+        cur.execute(
+            """
             SELECT товар_id, количество
             FROM Состав_заказа
             WHERE id = ?
-        """, (item_id,))
+        """,
+            (item_id,),
+        )
         row = cur.fetchone()
 
         if not row:
@@ -233,11 +238,14 @@ def delete_order_item(item_id):
         cur.execute("DELETE FROM Состав_заказа WHERE id = ?", (item_id,))
 
         # 3. Восстанавливаем остатки
-        cur.execute("""
+        cur.execute(
+            """
             UPDATE Товар
             SET количество = количество + ?
             WHERE id = ?
-        """, (quantity, product_id))
+        """,
+            (quantity, product_id),
+        )
 
         conn.commit()
         return True
