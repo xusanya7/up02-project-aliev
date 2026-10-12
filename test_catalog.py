@@ -1,59 +1,92 @@
-"""Расширенная проверка каталога товаров."""
+"""Тестирование каталога."""
 import db_products as db
 
 
-def test_fields():
-    """Проверяет, что у всех товаров есть обязательные поля."""
+def test_db_available():
+    """БД доступна."""
+    try:
+        products = db.get_all_products()
+        return isinstance(products, list)
+    except Exception as e:
+        print(f"❌ БД недоступна: {e}")
+        return False
+
+
+def test_products_count():
+    """Товары загружены."""
     products = db.get_all_products()
-    print(f"Всего товаров: {len(products)}")
+    return len(products) > 0
 
-    required = ["id", "category", "name", "weight", "price", "quantity", "image"]
-    errors = 0
 
+def test_product_fields():
+    """У всех товаров есть нужные атрибуты."""
+    required = ["id", "name", "category", "weight",
+                "price", "quantity", "image"]
+    products = db.get_all_products()
     for p in products:
         for field in required:
             if not hasattr(p, field):
                 print(f"❌ Товар id={p.id}: нет поля '{field}'")
-                errors += 1
-
-    if errors == 0:
-        print("✅ Все товары содержат нужные поля")
-    else:
-        print(f"❌ Найдено ошибок: {errors}")
+                return False
+    return True
 
 
-def test_prices():
-    """У всех товаров есть цена (не None)."""
+def test_prices_are_numbers():
+    """Все цены — числа."""
     products = db.get_all_products()
     for p in products:
-        if p.price is None:
-            print(f"❌ Товар id={p.id}: нет цены")
-            return
-    print("✅ У всех товаров есть цена")
+        if not isinstance(p.price, (int, float)):
+            print(f"❌ Товар id={p.id}: цена не число")
+            return False
+    return True
 
 
-def test_quantity():
-    """Количество у всех товаров ≥ 0."""
+def test_quantity_not_negative():
+    """Количество не отрицательное."""
     products = db.get_all_products()
     for p in products:
-        if p.quantity is None or p.quantity < 0:
-            print(f"❌ Товар id={p.id}: некорректное количество ({p.quantity})")
-            return
-    print("✅ У всех товаров количество ≥ 0")
+        if p.quantity < 0:
+            print(f"❌ Товар id={p.id}: отрицательное количество")
+            return False
+    return True
 
 
-def test_images():
-    """Хотя бы у одного товара есть изображение."""
+def test_names_not_empty():
+    """Названия не пустые."""
     products = db.get_all_products()
     for p in products:
-        if p.image:
-            print(f"✅ Есть товар с изображением (id={p.id}, {p.image})")
-            return
-    print("❌ Ни у одного товара нет изображения")
+        if not p.name:
+            print(f"❌ Товар id={p.id}: пустое название")
+            return False
+    return True
+
+
+def run_all_tests():
+    """Прогон всех тестов каталога."""
+    tests = [
+        ("БД доступна",                 test_db_available),
+        ("Товары загружены",            test_products_count),
+        ("У всех товаров нужные поля",  test_product_fields),
+        ("Все цены — числа",            test_prices_are_numbers),
+        ("Количество не отрицательное", test_quantity_not_negative),
+        ("Названия не пустые",          test_names_not_empty),
+    ]
+
+    print("=" * 60)
+    print("ТЕСТИРОВАНИЕ КАТАЛОГА")
+    print("=" * 60)
+
+    passed = 0
+    for name, func in tests:
+        result = func()
+        status = "✅" if result else "❌"
+        if result:
+            passed += 1
+        print(f"{status} {name}")
+
+    print("=" * 60)
+    print(f"Пройдено: {passed} / {len(tests)}")
 
 
 if __name__ == "__main__":
-    test_fields()
-    test_prices()
-    test_quantity()
-    test_images()
+    run_all_tests()
